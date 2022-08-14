@@ -1571,8 +1571,8 @@ m4+definitions(['
          |fetch
             /instr
                @M4_DECODE_STAGE
-                  *imem_addr = $Pc;
-                  >>1$$raw[M4_INSTR_RANGE] = *imem_data;
+                  *imem_addr = $next_pc;
+                  $$raw[M4_INSTR_RANGE] = *imem_data;
       ,
       \TLV
          // Default to HARDCODED_ARRAY
