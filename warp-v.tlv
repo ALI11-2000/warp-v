@@ -3021,7 +3021,7 @@ m4+definitions(['
                   *dmem_wea   = {4{$valid_st}} & $st_mask;
                   *dmem_web   = 4'b0;
                   *dmem_ena   = $valid_st;
-                  *dmem_enb   = $ld_valid;
+                  *dmem_enb   = $valid_ld;
                   >>1$$ld_value[M4_WORD_RANGE] = *dmem_doutb;
                ,
                \TLV
