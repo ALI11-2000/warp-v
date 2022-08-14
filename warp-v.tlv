@@ -3012,7 +3012,7 @@ m4+definitions(['
                       .douta(),                             // Port A RAM output data, width determined from NB_COL*COL_WIDTH
                       .doutb(>>1$$ld_valid[M4_WORD_RANGE])  // Port B RAM output data, width determined from NB_COL*COL_WIDTH
                     );
-               , M4_DMEM_STYLE, EXTERN ,
+               , M4_DMEM_STYLE, EXTERN,
                \TLV
                   *dmem_addra = $addr;
                   *dmem_addrb = $addr;
