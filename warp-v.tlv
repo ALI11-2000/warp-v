@@ -337,9 +337,9 @@ m4+definitions(['
          This can be enabled for testing in Makerchip environment.'],
      RISCV_FORMAL_ALTOPS, 0)
    m4_ifndef(
-      ['# IMem style: SRAM, HARDCODED_ARRAY, STUBBED'],
+      ['# IMem style: SRAM, HARDCODED_ARRAY, STUBBED, EXTERN'],
       IMEM_STYLE, m4_ifelse(M4_IMPL, 0, HARDCODED_ARRAY, SRAM),
-      ['# DMem style: SRAM, ARRAY, STUBBED'],
+      ['# DMem style: SRAM, ARRAY, STUBBED, EXTERN'],
       DMEM_STYLE, m4ifelse(M4_IMPL, 0, ARRAY, SRAM),
       ['# RF style: ARRAY, STUBBED'],
       RF_STYLE, ARRAY)
@@ -1566,6 +1566,13 @@ m4+definitions(['
             /instr
                @M4_DECODE_STAGE
                   $raw[M4_INSTR_RANGE] = {$Pc, $Pc[31:30]};
+      , M4_IMEM_STYLE, EXTERN,
+      \TLV
+         |fetch
+            /instr
+               @M4_DECODE_STAGE
+                  *imem_addr = $Pc;
+                  >>1$$raw[M4_INSTR_RANGE] = *imem_data;
       ,
       \TLV
          // Default to HARDCODED_ARRAY
@@ -3005,6 +3012,16 @@ m4+definitions(['
                       .douta(),                             // Port A RAM output data, width determined from NB_COL*COL_WIDTH
                       .doutb(>>1$$ld_valid[M4_WORD_RANGE])  // Port B RAM output data, width determined from NB_COL*COL_WIDTH
                     );
+               , M4_DMEM_STYLE, EXTERN ,
+               *dmem_addra = $addr;
+               *dmem_addrb = $addr;
+               *dmem_dina  = $st_data;
+               *dmem_dinb  = 32'b0;
+               *dmem_wea   = {4{$valid_st}} & $st_mask;
+               *dmem_web   = 4'b0;
+               *dmem_ena   = $valid_st;
+               *dmem_enb   = $ld_valid;
+               >>1$$ld_valid[M4_WORD_RANGE] = *dmem_doutb;
                ,
                \TLV
                   // Array. Required for VIZ.
