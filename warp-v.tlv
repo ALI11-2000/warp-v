@@ -3013,14 +3013,15 @@ m4+definitions(['
                       .doutb(>>1$$ld_valid[M4_WORD_RANGE])  // Port B RAM output data, width determined from NB_COL*COL_WIDTH
                     );
                , M4_DMEM_STYLE, EXTERN ,
-               *dmem_addra = $addr;
-               *dmem_addrb = $addr;
-               *dmem_dina  = $st_data;
-               *dmem_dinb  = 32'b0;
-               *dmem_wea   = {4{$valid_st}} & $st_mask;
-               *dmem_web   = 4'b0;
-               *dmem_ena   = $valid_st;
-               *dmem_enb   = $ld_valid;
+               \TLV
+                  *dmem_addra = $addr;
+                  *dmem_addrb = $addr;
+                  *dmem_dina  = $st_data;
+                  *dmem_dinb  = 32'b0;
+                  *dmem_wea   = {4{$valid_st}} & $st_mask;
+                  *dmem_web   = 4'b0;
+                  *dmem_ena   = $valid_st;
+                  *dmem_enb   = $ld_valid;
                >>1$$ld_valid[M4_WORD_RANGE] = *dmem_doutb;
                ,
                \TLV
