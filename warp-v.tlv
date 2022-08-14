@@ -3022,7 +3022,7 @@ m4+definitions(['
                   *dmem_web   = 4'b0;
                   *dmem_ena   = $valid_st;
                   *dmem_enb   = $valid_ld;
-                  $$ld_value[M4_WORD_RANGE] = *dmem_doutb;
+                  >>1$ld_value[M4_WORD_RANGE] = *dmem_doutb;
                ,
                \TLV
                   // Array. Required for VIZ.
