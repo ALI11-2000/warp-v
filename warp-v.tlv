@@ -3016,7 +3016,7 @@ m4+definitions(['
                \TLV
                   *dmem_addra = $addr;
                   *dmem_addrb = $addr;
-                  *dmem_dina  = $st_data;
+                  *dmem_dina  = $st_value;
                   *dmem_dinb  = 32'b0;
                   *dmem_wea   = {4{$valid_st}} & $st_mask;
                   *dmem_web   = 4'b0;
