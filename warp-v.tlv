@@ -1580,13 +1580,6 @@ m4+definitions(['
             assign instr_strs = '{m4_asm_mem_expr "END 
 
          |fetch
-            m4+ifelse(M4_VIZ, 1,
-               \TLV
-                  /instr_mem[m4_eval(M4_NUM_INSTRS-1):0]
-                     @M4_VIZ_STAGE
-                        $instr[M4_INSTR_RANGE] = *instrs[instr_mem];
-                        $instr_str[40*8-1:0] = *instr_strs[instr_mem];
-               )
             /instr
                @M4_DECODE_STAGE
                   *imem_addr = $next_pc;
