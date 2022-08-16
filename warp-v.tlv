@@ -1572,7 +1572,8 @@ m4+definitions(['
             /instr
                @M4_DECODE_STAGE
                   *imem_addr = $next_pc;
-                  $$raw[M4_INSTR_RANGE] = *imem_data;
+                  $imem_data = *imem_data;
+                  $$raw[M4_INSTR_RANGE] = >>1$imem_data;
       ,
       \TLV
          // Default to HARDCODED_ARRAY
@@ -3023,7 +3024,7 @@ m4+definitions(['
                   *dmem_wea0  = !(|*dmem_wea); // Active low write
                   *dmem_ena   = !$valid_st;  // Active low enable
                   *dmem_enb   = !$valid_ld;  // Active low enable
-                  >>1$ld_value[M4_WORD_RANGE]  = *dmem_doutb;
+                  $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
                ,
                \TLV
                   // Array. Required for VIZ.
