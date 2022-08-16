@@ -2981,12 +2981,13 @@ m4+definitions(['
          // ====
          // Load
          // ====
-         @M4_MEM_WR_STAGE
             m4+ifelse(M4_DMEM_STYLE, STUBBED,
+         @M4_MEM_WR_STAGE
                \TLV
                   $ld_value[M4_WORD_RANGE] = <<1$valid_st ? <<1$st_value ^ $addr : 32'b0;
                   `BOGUS_USE($st_mask)
                , M4_DMEM_STYLE, SRAM,
+         @M4_MEM_WR_STAGE
                \TLV
                   // For SRAM
                   // --------
@@ -3016,7 +3017,7 @@ m4+definitions(['
                     );
                , M4_DMEM_STYLE, EXTERN,
                \TLV
-                  |mem
+                  @M4_MEM_WR_STAGE
                      *dmem_addra = $addr;
                      *dmem_dina  = $st_value;
                      *dmem_dinb  = 32'b0;
@@ -3025,12 +3026,13 @@ m4+definitions(['
                      *dmem_wea0  = !(|*dmem_wea); // Active low write
                      *dmem_ena   = !$valid_st;  // Active low enable
                      *dmem_enb   = !$valid_ld;  // Active low enable
-                     @M4_RESULT_STAGE
-                        *dmem_addrb = $addr;
-                     @M4_REG_WR_STAGE
-                        $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
+                  @M4_RESULT_STAGE
+                     *dmem_addrb = $addr;
+                  @M4_REG_WR_STAGE
+                     $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
                ,
                \TLV
+               @M4_MEM_WR_STAGE
                   // Array. Required for VIZ.
                   /bank[m4_eval(M4_ADDRS_PER_WORD-1):0]
                      $ANY = /instr$ANY; // Find signal from outside of /bank.
