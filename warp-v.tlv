@@ -1595,7 +1595,7 @@ m4+definitions(['
                \TLV
                   /instr_mem[m4_eval(M4_NUM_INSTRS-1):0]
                      @M4_VIZ_STAGE
-                        $instr[M4_INSTR_RANGE] = *instrs[instr_mem];
+                        $instr[M4_INSTR_RANGE] = imem.mem[instr_mem];
                         $instr_str[40*8-1:0] = *instr_strs[instr_mem];
                )
             /instr
