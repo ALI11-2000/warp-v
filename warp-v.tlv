@@ -1571,7 +1571,7 @@ m4+definitions(['
          |fetch
             /instr
                @M4_DECODE_STAGE
-                  *imem_addr = >>1$next_pc;
+                  *imem_addr = $next_pc;
                   $imem_data[31:0] = *imem_data;
                   $$raw[M4_INSTR_RANGE] = >>1$imem_data;
       ,
