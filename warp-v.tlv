@@ -1572,7 +1572,7 @@ m4+definitions(['
             /instr
                @M4_DECODE_STAGE
                   *imem_addr = $next_pc;
-                  $imem_data = *imem_data;
+                  $imem_data[31:0] = *imem_data;
                   $$raw[M4_INSTR_RANGE] = >>1$imem_data;
       ,
       \TLV
