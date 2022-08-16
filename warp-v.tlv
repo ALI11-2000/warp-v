@@ -3016,18 +3016,19 @@ m4+definitions(['
                     );
                , M4_DMEM_STYLE, EXTERN,
                \TLV
-                  *dmem_addra = $addr;
-                  *dmem_dina  = $st_value;
-                  *dmem_dinb  = 32'b0;
-                  *dmem_wea   = {4{$valid_st}} & $st_mask;
-                  *dmem_web   = 4'b0;
-                  *dmem_wea0  = !(|*dmem_wea); // Active low write
-                  *dmem_ena   = !$valid_st;  // Active low enable
-                  *dmem_enb   = !$valid_ld;  // Active low enable
-                  @M4_RESULT_STAGE
-                     *dmem_addrb = $addr;
-                  @M4_REG_WR_STAGE
-                     $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
+                  |mem
+                     *dmem_addra = $addr;
+                     *dmem_dina  = $st_value;
+                     *dmem_dinb  = 32'b0;
+                     *dmem_wea   = {4{$valid_st}} & $st_mask;
+                     *dmem_web   = 4'b0;
+                     *dmem_wea0  = !(|*dmem_wea); // Active low write
+                     *dmem_ena   = !$valid_st;  // Active low enable
+                     *dmem_enb   = !$valid_ld;  // Active low enable
+                     @M4_RESULT_STAGE
+                        *dmem_addrb = $addr;
+                     @M4_REG_WR_STAGE
+                        $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
                ,
                \TLV
                   // Array. Required for VIZ.
