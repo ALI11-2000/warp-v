@@ -3020,8 +3020,9 @@ m4+definitions(['
                   *dmem_dinb  = 32'b0;
                   *dmem_wea   = {4{$valid_st}} & $st_mask;
                   *dmem_web   = 4'b0;
-                  *dmem_ena   = $valid_st;
-                  *dmem_enb   = $valid_ld;
+                  *dmem_wea0  = !(|*dmem_wea); // Active low write
+                  *dmem_ena   = !$valid_st;  // Active low enable
+                  *dmem_enb   = !$valid_ld;  // Active low enable
                   $ld_value[M4_WORD_RANGE] = *dmem_doutb;
                ,
                \TLV
