@@ -1573,7 +1573,7 @@ m4+definitions(['
                @M4_DECODE_STAGE
                   *imem_addr = $Pc;
                   $imem_data[31:0] = *imem_data;
-                  >>1$$raw[M4_INSTR_RANGE] = >>1$imem_data;
+                  <<1$$raw[M4_INSTR_RANGE] = >>1$imem_data;
       ,
       \TLV
          // Default to HARDCODED_ARRAY
