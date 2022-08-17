@@ -2981,11 +2981,15 @@ m4+definitions(['
          // ====
          // Load
          // ====
+         @M4_RESULT_STAGE
          m4+ifelse(M4_DMEM_STYLE, EXTERN,
-               \TLV
-                  @M4_RESULT_STAGE
-                     *dmem_addrb = $addr;
-                     *dmem_enb   = !$valid_ld;  // Active low enable)
+            \TLV
+               *dmem_addrb = $addr;
+               *dmem_enb   = !$valid_ld;  // Active low enable
+            ,
+            \TLV
+               
+         )
          @M4_MEM_WR_STAGE
             m4+ifelse(M4_DMEM_STYLE, STUBBED,
                \TLV
