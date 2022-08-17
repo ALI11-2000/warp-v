@@ -2983,13 +2983,8 @@ m4+definitions(['
          // Load
          // ====
          @M4_RESULT_STAGE
-            m4+ifelse(M4_DMEM_STYLE, EXTERN,
-               \TLV
-                  *dmem_addrb = $addr;
-                  *dmem_enb   = !$valid_ld;  // Active low enable
-               , 
-                  
-                  )
+            *dmem_addrb = $addr;
+            *dmem_enb   = !$valid_ld;  // Active low enable
          @M4_MEM_WR_STAGE
             m4+ifelse(M4_DMEM_STYLE, STUBBED,
                \TLV
@@ -4317,7 +4312,9 @@ m4+definitions(['
 
 \TLV dummy_viz_logic()
    // dummy
-   
+
+m4+ifelse(M4_IMEM_STYLE, EXTERN,
+,
 \TLV instruction_in_memory(|_top, _where_)
    /instr_mem[m4_eval(M4_NUM_INSTRS-1):0]
       \viz_js
@@ -4413,7 +4410,7 @@ m4+definitions(['
             '])
             this.getObjects().instr_str.set({text: `${instr_str}`})
           },
-   
+)  
 \TLV registers(/_top, _name, _heading, _sig_prefix, _num_srcs, _where_)
    // /regs or /fpu_regs
    /src[*]
