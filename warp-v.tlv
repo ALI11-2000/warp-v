@@ -2987,7 +2987,8 @@ m4+definitions(['
                *dmem_addrb = $addr;
                *dmem_enb   = !$valid_ld;  // Active low enable
             , 
-            )
+               
+               )
          @M4_MEM_WR_STAGE
             m4+ifelse(M4_DMEM_STYLE, STUBBED,
                \TLV
