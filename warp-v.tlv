@@ -4653,7 +4653,6 @@ m4+ifelse(M4_IMEM_STYLE, EXTERN,
                         !this.commit ? "gray" :
                                        "blue"
                      let pc = '/instr$pc'.step(step).asInt()
-                     let instr_str = m4_ifelse(M4_FORMAL, 1, "           " + '/instr$mnemonic', '|fetch/instr_mem[pc]$instr_str').step(step).asString("<UNKNOWN>")
                      this.getObjects().instr.set({
                         text: instr_str,
                         fill: color,
