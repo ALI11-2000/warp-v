@@ -4315,101 +4315,101 @@ m4+definitions(['
 
 m4+ifelse(M4_IMEM_STYLE, EXTERN,
 ,
-\TLV instruction_in_memory(|_top, _where_)
-   /instr_mem[m4_eval(M4_NUM_INSTRS-1):0]
-      \viz_js
-          all: {
-            box: {
-               width: 670,
-               height: 76 + 18 * M4_NUM_INSTRS,
-               fill: "#208028",
-               stroke: "white",
-               strokeWidth: 0
-            },
-            init() {
-               let imem_header = new fabric.Text("🗃️ Instr. Memory", {
-                  top: 10,
-                  left: 250,
-                  fontSize: 20,
-                  fontWeight: 800,
-                  fontFamily: "monospace",
-                  fill: "black"
+   \TLV instruction_in_memory(|_top, _where_)
+      /instr_mem[m4_eval(M4_NUM_INSTRS-1):0]
+         \viz_js
+             all: {
+               box: {
+                  width: 670,
+                  height: 76 + 18 * M4_NUM_INSTRS,
+                  fill: "#208028",
+                  stroke: "white",
+                  strokeWidth: 0
+               },
+               init() {
+                  let imem_header = new fabric.Text("🗃️ Instr. Memory", {
+                     top: 10,
+                     left: 250,
+                     fontSize: 20,
+                     fontWeight: 800,
+                     fontFamily: "monospace",
+                     fill: "black"
+                  })
+                  return {imem_header}
+               },
+               render() {
+                  // Highlight instruction.
+                  let pc = '['']|_top/instr$pc'.asInt(-1)
+                   this.highlighted_addr = pc
+                   instance = this.getContext().children[pc]
+                   if (typeof instance !== "undefined") {
+                      let color = '['']|_top/instr$commit'.asBool(false) ? "#b0ffff" : "#d0d0d0"
+                      instance.initObjects.instr_binary_box.set({fill: color})
+                      instance.initObjects.instr_asm_box.set({fill: color})
+                   }
+                   // Highlight 2nd issue instruction.
+                   let pc2 = '['']|_top/instr/orig_inst$pc'.asInt(-1)
+                   this.highlighted_addr2 = pc2
+                   instance2 = this.getContext().children[pc2]
+                   if ('['']|_top/instr$second_issue'.asBool(false) && typeof instance2 !== "undefined") {
+                      let color = "#ffd0b0"
+                      instance2.initObjects.instr_binary_box.set({fill: color})
+                      instance2.initObjects.instr_asm_box.set({fill: color})
+                   }
+               },
+               unrender() {
+                  //debbuger
+                  // Unhighlight instruction.
+                  let instance = this.getContext().children[this.highlighted_addr]
+                   if (typeof instance != "undefined") {
+                      instance.initObjects.instr_binary_box.set({fill: "white"})
+                      instance.initObjects.instr_asm_box.set({fill: "white"})
+                   }
+                   // Unhighlight 2nd issue instruction.
+                   let instance2 = this.getContext().children[this.highlighted_addr2]
+                   if (typeof instance2 != "undefined") {
+                      instance2.initObjects.instr_binary_box.set({fill: "white"})
+                      instance2.initObjects.instr_asm_box.set({fill: "white"})
+                   }
+               },
+             },
+             box: {strokeWidth: 0},
+             where: {_where_},
+             where0: {left: 30, top: 50},
+             layout: {top: 18}, //scope's instance stacked vertically
+             init() {
+               let instr_str = new fabric.Text("" , {
+                  left: 10,
+                  fontSize: 14,
+                  fontFamily: "monospace"
                })
-               return {imem_header}
-            },
-            render() {
-               // Highlight instruction.
-               let pc = '['']|_top/instr$pc'.asInt(-1)
-                this.highlighted_addr = pc
-                instance = this.getContext().children[pc]
-                if (typeof instance !== "undefined") {
-                   let color = '['']|_top/instr$commit'.asBool(false) ? "#b0ffff" : "#d0d0d0"
-                   instance.initObjects.instr_binary_box.set({fill: color})
-                   instance.initObjects.instr_asm_box.set({fill: color})
-                }
-                // Highlight 2nd issue instruction.
-                let pc2 = '['']|_top/instr/orig_inst$pc'.asInt(-1)
-                this.highlighted_addr2 = pc2
-                instance2 = this.getContext().children[pc2]
-                if ('['']|_top/instr$second_issue'.asBool(false) && typeof instance2 !== "undefined") {
-                   let color = "#ffd0b0"
-                   instance2.initObjects.instr_binary_box.set({fill: color})
-                   instance2.initObjects.instr_asm_box.set({fill: color})
-                }
-            },
-            unrender() {
-               //debbuger
-               // Unhighlight instruction.
-               let instance = this.getContext().children[this.highlighted_addr]
-                if (typeof instance != "undefined") {
-                   instance.initObjects.instr_binary_box.set({fill: "white"})
-                   instance.initObjects.instr_asm_box.set({fill: "white"})
-                }
-                // Unhighlight 2nd issue instruction.
-                let instance2 = this.getContext().children[this.highlighted_addr2]
-                if (typeof instance2 != "undefined") {
-                   instance2.initObjects.instr_binary_box.set({fill: "white"})
-                   instance2.initObjects.instr_asm_box.set({fill: "white"})
-                }
-            },
-          },
-          box: {strokeWidth: 0},
-          where: {_where_},
-          where0: {left: 30, top: 50},
-          layout: {top: 18}, //scope's instance stacked vertically
-          init() {
-            let instr_str = new fabric.Text("" , {
-               left: 10,
-               fontSize: 14,
-               fontFamily: "monospace"
-            })
-            let instr_asm_box = new fabric.Rect({
-               left: 0,
-               fill: "white",
-               width: 280,
-               height: 14
-            })
-            let instr_binary_box = new fabric.Rect({
-               left: 330,
-               fill: "white",
-               width: 280,
-               height: 14
-            })
-            return {instr_asm_box, instr_binary_box, instr_str}
-          },
-          render() {
-             // Instruction memory is constant, so just create it once.
-            m4_ifelse_block(M4_ISA, ['MINI'], ['
-               let instr_str = '$instr'.goTo(0).asString("?")
-            '], M4_ISA, ['RISCV'], ['
-               let instr_str = '$instr'.asBinaryStr(NaN) + "      " + '$instr_str'.asString("?")
-            '], M4_ISA, ['MIPSI'], ['
-               let instr_str = '$instr'.asBinaryStr("?")
-            '], ['
-               let instr_str = '$instr'.goTo(0).asString("?")
-            '])
-            this.getObjects().instr_str.set({text: `${instr_str}`})
-          },
+               let instr_asm_box = new fabric.Rect({
+                  left: 0,
+                  fill: "white",
+                  width: 280,
+                  height: 14
+               })
+               let instr_binary_box = new fabric.Rect({
+                  left: 330,
+                  fill: "white",
+                  width: 280,
+                  height: 14
+               })
+               return {instr_asm_box, instr_binary_box, instr_str}
+             },
+             render() {
+                // Instruction memory is constant, so just create it once.
+               m4_ifelse_block(M4_ISA, ['MINI'], ['
+                  let instr_str = '$instr'.goTo(0).asString("?")
+               '], M4_ISA, ['RISCV'], ['
+                  let instr_str = '$instr'.asBinaryStr(NaN) + "      " + '$instr_str'.asString("?")
+               '], M4_ISA, ['MIPSI'], ['
+                  let instr_str = '$instr'.asBinaryStr("?")
+               '], ['
+                  let instr_str = '$instr'.goTo(0).asString("?")
+               '])
+               this.getObjects().instr_str.set({text: `${instr_str}`})
+             },
 )  
 \TLV registers(/_top, _name, _heading, _sig_prefix, _num_srcs, _where_)
    // /regs or /fpu_regs
