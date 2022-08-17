@@ -2982,9 +2982,6 @@ m4+definitions(['
          // ====
          // Load
          // ====
-         @M4_RESULT_STAGE
-            *dmem_addrb = $addr;
-            *dmem_enb   = !$valid_ld;  // Active low enable
          @M4_MEM_WR_STAGE
             m4+ifelse(M4_DMEM_STYLE, STUBBED,
                \TLV
@@ -3019,7 +3016,9 @@ m4+definitions(['
                       .doutb(>>1$$ld_valid[M4_WORD_RANGE])  // Port B RAM output data, width determined from NB_COL*COL_WIDTH
                     );
                , M4_DMEM_STYLE, EXTERN,
-               \TLV   
+               \TLV  
+                  *dmem_addrb = $addr;
+                  *dmem_enb   = !$valid_ld;  // Active low enable
                   *dmem_addra = $addr;
                   *dmem_dina  = $st_value;
                   *dmem_dinb  = 32'b0;
@@ -3027,7 +3026,7 @@ m4+definitions(['
                   *dmem_web   = 4'b0;
                   *dmem_wea0  = !(|*dmem_wea); // Active low write
                   *dmem_ena   = !$valid_st;  // Active low enable
-                  $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
+                  >>1$ld_value[M4_WORD_RANGE]  = *dmem_doutb;
                ,
                \TLV
                   // Array. Required for VIZ.
