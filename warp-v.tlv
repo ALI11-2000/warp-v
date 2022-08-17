@@ -4653,6 +4653,7 @@ m4+ifelse(M4_IMEM_STYLE, EXTERN,
                         !this.commit ? "gray" :
                                        "blue"
                      let pc = '/instr$pc'.step(step).asInt()
+                     let instr_str = m4_ifelse(M4_FORMAL, 1, "           " + '/instr$mnemonic', '|fetch/instr_mem[pc]$instr_str').step(step).asString("<UNKNOWN>")
                      this.getObjects().instr.set({
                         text: instr_str,
                         fill: color,
@@ -5016,6 +5017,7 @@ m4+ifelse(M4_IMEM_STYLE, EXTERN,
          })
          m4_ifelse_block(M4_FORMAL, 1, , ['
          //
+         m4+ifelse(M4_IMEM_STYLE, EXTERN,,let $instr_str = '|fetch/instr_mem[pc]$instr_str'  // pc could be invalid, so make sure this isn't null.)
          let instr_string = $instr_str ? $instr_str.asString("?") : "?"
          objects.fetch_instr_viz = new fabric.Text(instr_string, {
                   top: 18 * pc + 50,
