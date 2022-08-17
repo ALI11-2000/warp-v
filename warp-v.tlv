@@ -2981,10 +2981,9 @@ m4+definitions(['
          // ====
          // Load
          // ====
-         @M4_RESULT_STAGE
-            *dmem_addrb = $addr;
          @M4_MEM_WR_STAGE
             *dmem_addra = $addr;
+            *dmem_addrv = $addr;
             *dmem_dina  = $st_value;
             *dmem_dinb  = 32'b0;
             *dmem_wea   = {4{$valid_st}} & $st_mask;
@@ -2992,6 +2991,7 @@ m4+definitions(['
             *dmem_wea0  = !(|*dmem_wea); // Active low write
             *dmem_ena   = !$valid_st;  // Active low enable
             *dmem_enb   = !$valid_ld;  // Active low enable
+         @M4_LD_RETURN_ALIGN
             $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
             m4+ifelse(M4_DMEM_STYLE, STUBBED,
                \TLV
