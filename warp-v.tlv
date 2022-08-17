@@ -1573,8 +1573,9 @@ m4+definitions(['
                @M4_FETCH_STAGE
                   ?$fetch
                      *imem_addr = $next_pc;
-                     $imem_data[31:0] = *imem_data;
-                     $raw[M4_INSTR_RANGE] = $imem_data;
+               @m4_eval(M4_FETCH_STAGE + 1)
+                  ?$fetch
+                     $raw[M4_INSTR_RANGE] = *imem_data;
       ,
       \TLV
          // Default to HARDCODED_ARRAY
