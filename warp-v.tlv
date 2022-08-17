@@ -1568,13 +1568,23 @@ m4+definitions(['
                   $raw[M4_INSTR_RANGE] = {$Pc, $Pc[31:30]};
       , M4_IMEM_STYLE, EXTERN,
       \TLV
+         \SV_plus
+            // The program in an instruction memory.
+            logic [M4_INSTR_RANGE] instrs [0:M4_NUM_INSTRS-1];
+            logic [40*8-1:0] instr_strs [0:M4_NUM_INSTRS];
+            
+          
+            m4_forloop(['m4_instr_ind'], 0, M4_NUM_INSTRS, ['assign instrs[m4_instr_ind] = m4_echo(['m4_instr']m4_instr_ind); '])
+            
+            // String representations of the instructions for debug.
+            assign instr_strs = '{m4_asm_mem_expr "END 
+
          |fetch
             /instr
-               @M4_FETCH_STAGE
-                  ?$fetch
-                     *imem_addr = $next_pc;
-                     $imem_data[31:0] = *imem_data;
-                     $raw[M4_INSTR_RANGE] = $imem_data;
+               @M4_DECODE_STAGE
+                  *imem_addr = $next_pc;
+                  $imem_data[31:0] = *imem_data;
+                  $raw[M4_INSTR_RANGE] = $imem_data;
       ,
       \TLV
          // Default to HARDCODED_ARRAY
@@ -2982,17 +2992,6 @@ m4+definitions(['
          // Load
          // ====
          @M4_MEM_WR_STAGE
-            *dmem_addra = $addr;
-            *dmem_dina  = $st_value;
-            *dmem_dinb  = 32'b0;
-            *dmem_wea   = {4{$valid_st}} & $st_mask;
-            *dmem_web   = 4'b0;
-            *dmem_wea0  = !(|*dmem_wea); // Active low write
-            *dmem_ena   = !$valid_st;  // Active low enable
-            *dmem_enb   = !$valid_ld;  // Active low enable
-            $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
-         @M4_RESULT_STAGE
-            *dmem_addrb = $addr;
             m4+ifelse(M4_DMEM_STYLE, STUBBED,
                \TLV
                   $ld_value[M4_WORD_RANGE] = <<1$valid_st ? <<1$st_value ^ $addr : 32'b0;
@@ -3026,7 +3025,17 @@ m4+definitions(['
                       .doutb(>>1$$ld_valid[M4_WORD_RANGE])  // Port B RAM output data, width determined from NB_COL*COL_WIDTH
                     );
                , M4_DMEM_STYLE, EXTERN,
-               
+               \TLV
+                  *dmem_addra = $addr;
+                  *dmem_addrb = $addr;
+                  *dmem_dina  = $st_value;
+                  *dmem_dinb  = 32'b0;
+                  *dmem_wea   = {4{$valid_st}} & $st_mask;
+                  *dmem_web   = 4'b0;
+                  *dmem_wea0  = !(|*dmem_wea); // Active low write
+                  *dmem_ena   = !$valid_st;  // Active low enable
+                  *dmem_enb   = !$valid_ld;  // Active low enable
+                  $ld_value[M4_WORD_RANGE]  = *dmem_doutb;
                ,
                \TLV
                   // Array. Required for VIZ.
