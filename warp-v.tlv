@@ -3832,7 +3832,13 @@
             /fpu
                $valid_dest_reg_valid = ($dest_reg_valid && /instr$commit) || (/instr$fpu_second_issue_div_sqrt || (/instr$second_issue && /instr>>m5_LD_RETURN_ALIGN$is_flw_instr));
             '])
-            $valid_ld = $ld && $commit;
+             m5+ifelse(m5_DMEM_STYLE, EXTERN,
+               \TLV
+                  $valid_ld = *dmem_ld_ack;
+               ,
+               \TLV
+                  $valid_ld = $ld && $commit;
+             )
             $valid_st = $st && $commit;
 
    m5+fixed_latency_fake_memory(/_cpu, 0)
