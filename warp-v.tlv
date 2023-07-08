@@ -3679,7 +3679,7 @@
             // A returning load clobbers the instruction.
             // (Could do this with lower latency. Right now it goes through memory pipeline $ANY, and
             //  it is non-speculative. Both could easily be fixed.)
-            $second_issue_ld = /_cpu|mem/data>>m5_LD_RETURN_ALIGN$valid_ld && 1'b\m5_INJECT_RETURNING_LD;
+            $second_issue_ld = *dmem_ld_ack && 1'b\m5_INJECT_RETURNING_LD;
             $second_issue = ($second_issue_ld m5_if(m5_EXT_M, ['|| $second_issue_div_mul']) m5_if(m5_EXT_F, ['|| $fpu_second_issue_div_sqrt']) m5_if(m5_EXT_B, ['|| $second_issue_clmul_crc']));
             // Recirculate returning load or the div_mul_result from /orig_inst scope
             
@@ -3833,14 +3833,8 @@
                $valid_dest_reg_valid = ($dest_reg_valid && /instr$commit) || (/instr$fpu_second_issue_div_sqrt || (/instr$second_issue && /instr>>m5_LD_RETURN_ALIGN$is_flw_instr));
             '])
             
-            m5+ifelse(m5_DMEM_STYLE, EXTERN,
-               \TLV
-                  $valid_ld = *dmem_ld_ack;
-               ,
-               \TLV
-                  $valid_ld = $ld && $commit;
-               )
             $valid_st = $st && $commit;
+            $valid_ld = $ld && $commit;
 
    m5+fixed_latency_fake_memory(/_cpu, 0)
    |fetch
