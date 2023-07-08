@@ -3834,7 +3834,7 @@
             '])
              m5+ifelse(m5_DMEM_STYLE, EXTERN,
                \TLV
-                  $valid_ld = *;
+                  $valid_ld = *dmem_ld_ack;
                ,
                \TLV
                   $valid_ld = $ld && $commit;
